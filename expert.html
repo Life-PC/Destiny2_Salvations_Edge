@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>超初級</title>
+    <title>上級</title>
     <script>
         const shape = ["●", "▲", "■"];
         let ngShape = [0, 0, 0];
@@ -201,9 +201,26 @@
     </script>
 
     <style>
-        body {
+        * {
+            color: #FFF;
             margin: 0;
             padding: 0;
+        }
+        input {
+            color: #000;
+        }
+        body {
+            background-image: url(img/destiny-2-salvation-edge-verity.png);
+            background-size: auto 100vh;
+            background-repeat: no-repeat;
+
+            padding: 0;
+            margin: 0;
+        }
+        #w {
+            background-color: rgba(0, 0, 0, 0.3);
+            width: 100%;
+            height: 100vh;
         }
         img {
             width: 20vw;
@@ -219,10 +236,10 @@
             justify-content: space-around;
             font-size: 50px;
 
-            border: solid 1px #000;
+            border: solid 1px #FFF;
         }
         #ng1,#ng2,#ng3{
-            border: solid 1px #000;
+            border: solid 1px #FFF;
         }
         #ans1,#ans2,#ans3 {
             display: flex;
@@ -259,25 +276,26 @@
     </style>
 </head>
 <body>
-    <p>図形を拾うと、3つなくなるまで拾えなくなります。<br>
-    拾った図形をどの立体図形に入れるか指定してください。<br>
-    1個目に入れた立体図形と2個目に入れた立体図形の、図形を交換することができます。</p>
-    <div id="ngDisplay">
-        <p id="ng1">●</p>
-        <p id="ng2">▲</p>
-        <p id="ng3">■</p>
+    <div id="w">
+        <p>図形を拾うと、3つなくなるまで拾えなくなります。<br>
+        拾った図形をどの立体図形に入れるか指定してください。<br>
+        1個目に入れた立体図形と2個目に入れた立体図形の、図形を交換することができます。</p>
+        <div id="ngDisplay">
+            <p id="ng1">●</p>
+            <p id="ng2">▲</p>
+            <p id="ng3">■</p>
+        </div>
+        <div id="ansDisplay">
+            <p id="ans1"><img src="img/shape00.png" alt="" onclick="imgSetGroup(0, this);"></p>
+            <p id="ans2"><img src="img/shape11.png" alt="" onclick="imgSetGroup(1, this);"></p>
+            <p id="ans3"><img src="img/shape22.png" alt="" onclick="imgSetGroup(2, this);"></p>
+        </div>
+        <p id="handShape"></p>
+        <ul>
+            <li id="button1"><input type="button" value="●" onclick="shape_click(0);"></li>
+            <li id="button2"><input type="button" value="▲" onclick="shape_click(1);"></li>
+            <li id="button3"><input type="button" value="■" onclick="shape_click(2);"></li>
+        </ul>
     </div>
-    <div id="ansDisplay">
-        <p id="ans1"><img src="img/shape00.png" alt="" onclick="imgSetGroup(0, this);"></p>
-        <p id="ans2"><img src="img/shape11.png" alt="" onclick="imgSetGroup(1, this);"></p>
-        <p id="ans3"><img src="img/shape22.png" alt="" onclick="imgSetGroup(2, this);"></p>
-    </div>
-    <p id="handShape"></p>
-
-    <ul>
-        <li id="button1"><input type="button" value="●" onclick="shape_click(0);"></li>
-        <li id="button2"><input type="button" value="▲" onclick="shape_click(1);"></li>
-        <li id="button3"><input type="button" value="■" onclick="shape_click(2);"></li>
-    </ul>
 </body>
 </html>
