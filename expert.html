@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超初級</title>
+    <script>
+        const shape = ["●", "▲", "■"];
+        let ngShape = [0, 0, 0];
+        let displayShape = [
+            [0, 0],
+            [0, 0],
+            [0, 0]
+        ];
+        let setButtons = -1;
+        let setGroup = -1;
+        let targetGroup = -1;
+        let setShape = -1;
+        let getShape = -1;
+        let buttonsCount = 3;
+        let firstTarget;
+
+        function reset() {
+            let shapeNum;
+            let ngShapeNum = [0, 1, 2];
+            let displayShapeNum = [[0, 0], [1, 1], [2, 2]];
+
+            for (let i = 0; i < 100; i++) {
+                let rand1 = getRandomInt(3);
+                let tmpInt = ngShapeNum[rand1];
+
+                let rand2 = getRandomInt(3);
+                ngShapeNum[rand1] = ngShapeNum[rand2];
+
+                ngShapeNum[rand2] = tmpInt;
+
+            }
+            for (let i = 0; i < 100; i++) {
+                let rg1 = getRandomInt(3);
+                let rs1 = getRandomInt(2);
+
+                let tmpInt = displayShapeNum[rg1][rs1];
+
+                let rg2 = getRandomInt(3);
+                let rs2 = getRandomInt(2);
+
+                displayShapeNum[rg1][rs1] = displayShapeNum[rg2][rs2];
+
+                displayShapeNum[rg2][rs2] = tmpInt;
+            }
+
+            for (let i = 0; i < 3; i++) {
+                if (displayShapeNum[i][0] > displayShapeNum[i][1]) {
+                    let tmpInt = displayShapeNum[i][1];
+                    displayShapeNum[i][1] = displayShapeNum[i][0];
+                    displayShapeNum[i][0] = tmpInt;
+                }
+            }
+
+            setButtons = -1;
+            setGroup = -1;
+            targetGroup = -1;
+            setShape = -1;
+            buttonsCount = 3;
+
+            for (let i = 0; i < 3; i++) {
+                document.getElementById("ng" + (i + 1)).innerText = shape[ngShapeNum[i]];
+                ngShape[i] = ngShapeNum[i]
+                document.getElementById("ans" + (i + 1)).innerHTML = '<img src="img/shape' + displayShapeNum[i][0] + displayShapeNum[i][1] + '.png" onclick="imgSetGroup(' + i + ', this);"  />';
+                displayShape[i][0] = displayShapeNum[i][0];
+                displayShape[i][1] = displayShapeNum[i][1];
+            }
+
+            document.getElementById('button1').innerHTML = '<input type="button" value="●" onclick="shape_click(0);">';
+            document.getElementById('button2').innerHTML = '<input type="button" value="▲" onclick="shape_click(1);">';
+            document.getElementById('button3').innerHTML = '<input type="button" value="■" onclick="shape_click(2);">';
+
+        }
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        window.onload = function() {
+            reset();
+        };
+
+        function imgSetGroup(g, point) {
+            if (getShape === -1)
+                return;
+
+            if (targetGroup === g)
+                return;
+
+            targetGroup = g;
+
+            if (targetGroup === -1)
+                return;
+
+            if (setButtons !== -1) {
+                let nowSape;
+
+                if (displayShape[targetGroup][0] === getShape)
+                    nowSape = 0;
+                else
+                    nowSape = 1;
+
+                let tmpInt = displayShape[setGroup][setShape];
+                displayShape[setGroup][setShape] = displayShape[targetGroup][nowSape];
+                displayShape[targetGroup][nowSape] = tmpInt;
+
+                for (let i = 0; i < 3; i++) {
+                    if (displayShape[i][0] > displayShape[i][1]) {
+                        let tmpInt = displayShape[i][1];
+                        displayShape[i][1] = displayShape[i][0];
+                        displayShape[i][0] = tmpInt;
+                    }
+                }
+
+                reDisaplay(setGroup);
+                reDisaplay(targetGroup);
+
+                setButtons = -1;
+                setGroup = -1;
+                setShape = -1;
+
+
+                ans();
+                document.getElementById('handShape').innerText = '';
+                firstTarget.style.backgroundColor = 'none';
+                return;
+            }
+
+            if (displayShape[targetGroup][0] === getShape
+                || displayShape[targetGroup][1] === getShape) {
+                    setButtons = getShape;
+                    setGroup = targetGroup;
+                    
+                    if (displayShape[targetGroup][0] === getShape) {
+                        setShape = 0;
+                    }
+                    else {
+                        setShape = 1;
+                    }
+                    targetGroup = -1;
+                    getShape = -1;
+
+                    firstTarget = point;
+                    firstTarget.style.backgroundColor = '#0F0';
+            }
+
+            document.getElementById('handShape').innerText = '';
+
+            if (buttonsCount === 0) {
+                document.getElementById('button1').innerHTML = '<input type="button" value="●" onclick="shape_click(0);">';
+                document.getElementById('button2').innerHTML = '<input type="button" value="▲" onclick="shape_click(1);">';
+                document.getElementById('button3').innerHTML = '<input type="button" value="■" onclick="shape_click(2);">';
+            }
+        }
+        function shape_click(s) {
+            getShape = s;
+            document.getElementById('handShape').innerText = shape[s];
+
+            if (s === 0) {
+                document.getElementById('button1').innerHTML = "";
+                buttonsCount--;
+            }
+            else if (s === 1) {
+                document.getElementById('button2').innerHTML = "";
+                buttonsCount--;
+            }
+            else {
+                document.getElementById('button3').innerHTML = "";
+                buttonsCount--;
+            }
+        }
+
+        function reDisaplay(g) {
+            document.getElementById("ans" + (g + 1)).innerHTML = '<img src="img/shape' + displayShape[g][0] + displayShape[g][1] + '.png" onclick="imgSetGroup(' + g + ', this);" />';
+        } 
+
+        function ans() {
+            let ng = 0;
+            for (let i = 0; i < 3; i++) {
+                if (displayShape[i][0] === ngShape[i]
+                    || displayShape[i][1] === ngShape[i]) {
+                        ng++;
+                    }
+            }
+
+            for (let i = 0; i < 3; i++) {
+                if (displayShape[i][0] === displayShape[i][1]) {
+                    ng++;
+                }
+            }
+
+            if (ng === 0) {
+                alert('Finish!!');
+            }
+        }
+
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        img {
+            width: 20vw;
+            height: auto;
+        }
+
+        #ngDisplay,
+        #ansDisplay {
+            width: calc(100% - 2px);
+            height: 20vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            font-size: 50px;
+
+            border: solid 1px #000;
+        }
+        #ng1,#ng2,#ng3{
+            border: solid 1px #000;
+        }
+        #ans1,#ans2,#ans3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        ul {
+            display: flex;
+            list-style-type: none;
+            flex-wrap: wrap;
+
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            width: 33%;
+            padding: 0;
+            margin: 0;
+        }
+        input {
+            width: 100%;
+            height: 50px;
+            font-size: 25px;
+        }
+        #handShape {
+            font-size: 50px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <p>図形を拾うと、3つなくなるまで拾えなくなります。<br>
+    拾った図形をどの立体図形に入れるか指定してください。<br>
+    1個目に入れた立体図形と2個目に入れた立体図形の、図形を交換することができます。</p>
+    <div id="ngDisplay">
+        <p id="ng1">●</p>
+        <p id="ng2">▲</p>
+        <p id="ng3">■</p>
+    </div>
+    <div id="ansDisplay">
+        <p id="ans1"><img src="img/shape00.png" alt="" onclick="imgSetGroup(0, this);"></p>
+        <p id="ans2"><img src="img/shape11.png" alt="" onclick="imgSetGroup(1, this);"></p>
+        <p id="ans3"><img src="img/shape22.png" alt="" onclick="imgSetGroup(2, this);"></p>
+    </div>
+    <p id="handShape"></p>
+
+    <ul>
+        <li id="button1"><input type="button" value="●" onclick="shape_click(0);"></li>
+        <li id="button2"><input type="button" value="▲" onclick="shape_click(1);"></li>
+        <li id="button3"><input type="button" value="■" onclick="shape_click(2);"></li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超初級</title>
+    <script>
+        const shape = ["●", "▲", "■"];
+        let setNgShape = 0;
+        let buttonNgShape = 0;
+        let setShepe = [0, 0];
+        let ngAnsCount = 0;
+        let ansCount = 0;
+
+        function reset() {
+            let shapeNum = getRandomInt(3);
+            let displayShape = shape[shapeNum];
+            setShepe[0] = shapeNum;
+
+            shapeNum = getRandomInt(3);
+            displayShape += shape[shapeNum];
+            setShepe[1] = shapeNum;
+
+            shapeNum = getRandomInt(3);
+            let displayNgShape = shape[shapeNum];
+            setNgShape = shapeNum;
+
+            if (setShepe[0] === setNgShape
+                || setShepe[1] === setNgShape) {
+                
+                ngAnsCount = 1;
+            }
+            else {
+                ngAnsCount = 0;
+            }
+
+            if (setShepe[0] === setShepe[1]) {
+                ansCount = 2;
+            }
+            else {
+                ansCount = 1;
+            }
+
+            document.getElementById("display1").innerText = displayNgShape; 
+            document.getElementById("display2").innerText = displayShape; 
+        }
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        window.onload = function() {
+            reset();
+        };
+
+        function ngShape_click(s) {
+
+            if (ngAnsCount === 0) {
+                alert('×');
+                reset();
+                return;
+            }
+
+            if (setNgShape !== s) {
+                
+                alert('×');
+                reset();
+                return;
+            }
+
+            buttonNgShape = s;
+        }
+
+        function shape_click(s) {
+
+            let ans = 0;
+
+            for (let i = 0; i < 2 ; i++) {
+                if (setShepe[i] === s) {
+                    ans = 1;
+                    break;
+                }
+            }
+
+            if (ans === 1) {
+                alert('×');
+                reset();
+                return;
+            }
+
+            if (ansCount === 1) {
+                if (ngAnsCount === 1) {
+                    if (setNgShape !== buttonNgShape) {
+                        alert('×');
+                        reset();
+                        return;
+                    }
+                }
+
+                alert('○');
+                reset();
+                return;
+            }
+
+            if (ansCount === 2) {
+                ansCount--;
+            }
+        }
+
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #display1,
+        #display2 {
+            width: calc(100% - 2px);
+            height: 20vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+
+            border: solid 1px #000;
+        }
+        ul {
+            display: flex;
+            list-style-type: none;
+            flex-wrap: wrap;
+
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            width: 33%;
+            padding: 0;
+            margin: 0;
+        }
+        li:first-child {
+            width: 100%
+        }
+        input {
+            width: 100%;
+            height: 50px;
+            font-size: 25px;
+        }
+
+        #setButtons1 {
+            bottom: 74px;
+        }
+    </style>
+</head>
+<body>
+    <p>一つ目の図形は、次の図形に含まれていてはいけないものが表示されています。<br>
+        含まれてはいけないものと、足らない図形を選択してください。</p>
+    
+    <p id="display1">●</p>
+    <p id="display2">●▲</p>
+    <ul id="setButtons1">
+        <li>NG図形が含まれていれば選択</li>
+        <li><input type="button" value="●" onclick="ngShape_click(0);"></li>
+        <li><input type="button" value="▲" onclick="ngShape_click(1);"></li>
+        <li><input type="button" value="■" onclick="ngShape_click(2);"></li>
+    </ul>
+    <ul id="setButtons2">
+        <li>足らない図形</li>
+        <li><input type="button" value="●" onclick="shape_click(0);"></li>
+        <li><input type="button" value="▲" onclick="shape_click(1);"></li>
+        <li><input type="button" value="■" onclick="shape_click(2);"></li>
+    </ul>
+</body>
+</html>

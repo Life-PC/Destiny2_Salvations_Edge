@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超初級</title>
+    <script>
+        const shape = ["●", "▲", "■"];
+        let ngShape = [0, 0, 0];
+        let displayShape = [
+            [0, 0],
+            [0, 0],
+            [0, 0]
+        ];
+        let setButtons = -1;
+        let setGroup = -1;
+        let setShape = -1;
+
+        function reset() {
+            let shapeNum;
+            let ngShapeNum = [0, 1, 2];
+            let displayShapeNum = [[0, 0], [1, 1], [2, 2]];
+
+            for (let i = 0; i < 100; i++) {
+                let rand1 = getRandomInt(3);
+                let tmpInt = ngShapeNum[rand1];
+
+                let rand2 = getRandomInt(3);
+                ngShapeNum[rand1] = ngShapeNum[rand2];
+
+                ngShapeNum[rand2] = tmpInt;
+
+            }
+            for (let i = 0; i < 100; i++) {
+                let rg1 = getRandomInt(3);
+                let rs1 = getRandomInt(2);
+
+                let tmpInt = displayShapeNum[rg1][rs1];
+
+                let rg2 = getRandomInt(3);
+                let rs2 = getRandomInt(2);
+
+                displayShapeNum[rg1][rs1] = displayShapeNum[rg2][rs2];
+
+                displayShapeNum[rg2][rs2] = tmpInt;
+            }
+
+            setButtons = -1;
+            setGroup = -1;
+            setShape = -1;
+
+            for (let i = 0; i < 3; i++) {
+                document.getElementById("ng" + (i + 1)).innerText = shape[ngShapeNum[i]];
+                ngShape[i] = ngShapeNum[i]
+                document.getElementById("ans" + (i + 1)).innerText = shape[displayShapeNum[i][0]] + shape[displayShapeNum[i][1]];
+                displayShape[i][0] = displayShapeNum[i][0];
+                displayShape[i][1] = displayShapeNum[i][1];
+            }
+
+        }
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        window.onload = function() {
+            reset();
+        };
+
+        function shape_click(g, s) {
+
+            if (setGroup === g)
+                return;
+
+            if (setButtons !== -1) {
+                let nowSape;
+
+                if (displayShape[g][0] === s)
+                    nowSape = 0;
+                else
+                    nowSape = 1;
+
+                let tmpInt = displayShape[setGroup][setShape];
+                displayShape[setGroup][setShape] = displayShape[g][nowSape];
+                displayShape[g][nowSape] = tmpInt;
+
+                reDisaplay(setGroup);
+                reDisaplay(g);
+
+                setButtons = -1;
+                setGroup = -1;
+                setShape = -1;
+
+                ans();
+                return;
+            }
+
+            if (displayShape[g][0] === s
+                || displayShape[g][1] === s) {
+                    setButtons = s;
+                    setGroup = g;
+
+                    if (displayShape[g][0] === s) {
+                        setShape = 0;
+                    }
+                    else {
+                        setShape = 1;
+                    }
+            }
+        }
+
+        function reDisaplay(g) {
+            document.getElementById("ans" + (g + 1)).innerText = shape[displayShape[g][0]] + shape[displayShape[g][1]];
+        } 
+
+        function ans() {
+            let ng = 0;
+            for (let i = 0; i < 3; i++) {
+                if (displayShape[i][0] === ngShape[i]
+                    || displayShape[i][1] === ngShape[i]) {
+                        ng++;
+                    }
+            }
+
+            for (let i = 0; i < 3; i++) {
+                if (displayShape[i][0] === displayShape[i][1]) {
+                    ng++;
+                }
+            }
+
+            if (ng === 0) {
+                alert('Finish!!');
+            }
+        }
+
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #buttons {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        #setButtons1,
+        #setButtons2,
+        #setButtons3 {
+            width: 33%;
+        }
+
+        #ngDisplay,
+        #ansDisplay {
+            width: calc(100% - 2px);
+            height: 20vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            font-size: 50px;
+
+            border: solid 1px #000;
+        }
+        #ng1,#ng2,#ng3,
+        #ans1,#ans2,#ans3 {
+            border: solid 1px #000;
+        }
+        ul {
+            display: flex;
+            list-style-type: none;
+            flex-wrap: wrap;
+
+            bottom: 0;
+            width: 33%;
+
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            width: 33%;
+            padding: 0;
+            margin: 0;
+        }
+        input {
+            width: 100%;
+            height: 50px;
+            font-size: 25px;
+        }
+
+        #setButtons1 {
+            bottom: 74px;
+        }
+    </style>
+</head>
+<body>
+    <p>上三つの図形は、下の図形に含まれてはいけない図形が表示されています。<br>
+        下の図形は1対1で交換することが可能です。<br>
+        ボタンを押して、図形の交換を行い、正解するまで行ってください。 
+    </p>
+    <div id="ngDisplay">
+        <p id="ng1">●</p>
+        <p id="ng2">▲</p>
+        <p id="ng3">■</p>
+    </div>
+    <div id="ansDisplay">
+        <p id="ans1">●▲</p>
+        <p id="ans2">■●</p>
+        <p id="ans3">▲■</p>
+    </div>
+
+
+    <div id="buttons">
+        <ul id="setButtons1">
+            <li><input type="button" value="●" onclick="shape_click(0, 0);"></li>
+            <li><input type="button" value="▲" onclick="shape_click(0, 1);"></li>
+            <li><input type="button" value="■" onclick="shape_click(0, 2);"></li>
+        </ul>
+        <ul id="setButtons2">
+            <li><input type="button" value="●" onclick="shape_click(1, 0);"></li>
+            <li><input type="button" value="▲" onclick="shape_click(1, 1);"></li>
+            <li><input type="button" value="■" onclick="shape_click(1, 2);"></li>
+        </ul>
+        <ul id="setButtons3">
+            <li><input type="button" value="●" onclick="shape_click(2, 0);"></li>
+            <li><input type="button" value="▲" onclick="shape_click(2, 1);"></li>
+            <li><input type="button" value="■" onclick="shape_click(2, 2);"></li>
+        </ul>
+    </div>
+</body>
+</html>
